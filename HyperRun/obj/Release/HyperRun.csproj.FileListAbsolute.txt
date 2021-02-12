@@ -1,0 +1,12 @@
+C:\BitBucket\hyperrun\HyperRun\bin\Release\VariableInFile - Copy.txt
+C:\BitBucket\hyperrun\HyperRun\bin\Release\VariableInFile.txt
+C:\BitBucket\hyperrun\HyperRun\bin\Release\HyperRun.exe.config
+C:\BitBucket\hyperrun\HyperRun\bin\Release\HyperRun.exe
+C:\BitBucket\hyperrun\HyperRun\bin\Release\HyperRun.pdb
+C:\BitBucket\hyperrun\HyperRun\bin\Release\CommandLine.dll
+C:\BitBucket\hyperrun\HyperRun\bin\Release\NLog.dll
+C:\BitBucket\hyperrun\HyperRun\bin\Release\CommandLine.xml
+C:\BitBucket\hyperrun\HyperRun\bin\Release\NLog.xml
+C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.csproj.CopyComplete
+C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.exe
+C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.pdb
