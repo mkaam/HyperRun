@@ -15,14 +15,23 @@ namespace HyperRun
         [Option(HelpText = "Full path Logging file or use filename only, by default App rootpath will be used. Example: C:\\Logs")]
         public string LogFile { get; set; }
 
-        [Option(HelpText = "Paralel execution based on this list, and use this variable as Output. Example: SDA JOG")]
+        [Option(Group = "VariableIn", HelpText = "Paralel execution based on this list, and use this variable as Output. Example: SDA JOG")]
         public IEnumerable<string> VariableIn { get; set; }
 
-        [Option(Default="VariableInFile.txt", HelpText = "Filename with fullpath, Paralel execution based on this list, and use this variable as Output. Example: C:\\AreaCodeList.txt")]
+        [Option(Group = "VariableIn", HelpText = "Filename with fullpath, Paralel execution based on this list, and use this variable as Output. Example: C:\\AreaCodeList.txt")]
         public string VariableInFile { get; set; }
 
-        [Option(Required = true, HelpText = "List from VariableIn will be use as output for VariableOut. Example : $AreaCode")]
-        public string VariableOut { get; set; }
+        [Option(Group = "VariableIn", HelpText = "Query Filename with fullpath, Parallel execution based on query result, and use column as VariableInx. Example: C:\\VariableInQuery.sql")]
+        public string VariableInQuery { get; set; }
+
+        [Option(HelpText = "Required if VariableInQuery is set. Servermame where VariableInQuery will be executed.")]
+        public string ServerName { get; set; }
+
+        [Option(HelpText = "Required if VariableInQuery is set. DBName where VariableInQuery will be executed.")]
+        public string DBName { get; set; }
+
+        [Option(Required = true, HelpText = "List from VariableIn will be store as VariableOut. Example : $AreaCode")]
+        public IEnumerable<string> VariableOut { get; set; }
 
         [Option(Required = true, HelpText = "Application Executable file with full path included. Example : Notepad.exe")]
         public string Command { get; set; }

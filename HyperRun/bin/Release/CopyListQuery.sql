@@ -1,0 +1,1 @@
+﻿select SourcePath, [FileName], DestinationPath, AreaCode  from Users.dbo.PDFTerritory_Files

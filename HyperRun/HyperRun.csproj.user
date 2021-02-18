@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>--VariableOut {AreaCode} --Command "powershell.exe" --Argument "-file E:\INTERFACE\SAMPOERNA\QueryToAllDB\script\AM-Mass_ImportCSVtoSQLTable.ps1 -csvdir \\PMIIDSUBDEV38\iSMSMirrorDirectory%24\ftp_{AreaCode}_prd%24\3.PRD\Import\TerritoryOOT -filter %2a.csv -target_server PMIIDSUBDEV42\DEV2012 -target_db Users -delimiter "","" -codex TerritoryOOT_{AreaCode} -backupPath \\PMIIDSUBDEV38\iSMSMirrorDirectory%24\ftp_{AreaCode}_prd%24\3.PRD\Import\Archive"</StartArguments>
+    <StartArguments>--LogFile E:\ssisfiles\PDFForTA\Logs\HyperRunLog.csv --VariableInQuery E:\ssisfiles\PDFForTA\Query\CopyListQuery.sql --ServerName PMIIDSUBDEV42\DEV2012 --DBName Users --VariableOut {SourcePath} {FileName} {DestinationPath} {AreaCode} --Command robocopy.exe --Argument "%27{SourcePath}%27 %27{DestinationPath}%27 %27{FileName}%27 /r:3 /w:10 /log+:%27E:\ssisfiles\PDFForTA\Logs\{FileName}.log%27"</StartArguments>
   </PropertyGroup>
 </Project>

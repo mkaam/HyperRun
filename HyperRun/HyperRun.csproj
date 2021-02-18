@@ -64,6 +64,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CopyListQuery.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Usage Sample.txt" />
     <Content Include="VariableInFile - Copy.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

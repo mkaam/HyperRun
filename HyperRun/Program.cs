@@ -3,6 +3,8 @@ using NLog;
 using NLog.Layouts;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -48,7 +50,9 @@ namespace HyperRun
                 logger.Debug($"Application Finished. Elapsed time: {_watch.ElapsedMilliseconds}ms");
             }
 
-            //Console.ReadLine();
+#if DEBUG
+            Console.WriteLine("Press enter to close..."); Console.ReadLine();
+#endif
         }
 
         static void PathConfigure(Options opts)
@@ -66,6 +70,11 @@ namespace HyperRun
             if (opts.VariableInFile != null && Path.GetFileName(opts.VariableInFile) == opts.VariableInFile)
             {             
                 opts.VariableInFile = $"{Path.Combine(RootPath, opts.VariableInFile)}";
+            }
+
+            if (opts.VariableInQuery != null && Path.GetFileName(opts.VariableInQuery) == opts.VariableInQuery)
+            {
+                opts.VariableInQuery = $"{Path.Combine(RootPath, opts.VariableInQuery)}";
             }
 
         }
@@ -123,44 +132,106 @@ namespace HyperRun
             PathConfigure(opts);
             LoggerConfigure(opts);
 
-            // remove " char at first and last
-            opts.Argument = opts.Argument.Substring(0, 1) == "\"" ? opts.Argument.Remove(0, 1): opts.Argument;
-            opts.Argument = opts.Argument.Substring(opts.Argument.Length-1, 1) == "\"" ? opts.Argument.Remove(opts.Argument.Length - 1, 1) : opts.Argument;
-            opts.Argument = opts.Argument.Replace("\"\"","\"");
-
             _watch = new Stopwatch();
             _watch.Start();
             logger.Debug("Application Start");
 
-            if (opts.VariableIn.Count() <= 0)
+            if (opts.Argument != null)
+            {
+                // remove " char at first and last
+                opts.Argument = opts.Argument.Substring(0, 1) == "\"" ? opts.Argument.Remove(0, 1) : opts.Argument;
+                opts.Argument = opts.Argument.Substring(opts.Argument.Length - 1, 1) == "\"" ? opts.Argument.Remove(opts.Argument.Length - 1, 1) : opts.Argument;
+                opts.Argument = opts.Argument.Replace("\"\"", "\"");
+
+
+            }
+
+            if (opts.VariableInFile != null)
             {
                 opts.VariableIn = File.ReadLines(opts.VariableInFile, Encoding.Default);
             }
 
-            Parallel.ForEach(opts.VariableIn, (VariableIn) =>
+            if (opts.VariableInQuery != null)
             {
-                string argument = "";
-                string cmd = "";
-
-                if (opts.Argument != null)
+                var QueryString = "";
+                using (StreamReader sr = new StreamReader(opts.VariableInQuery))
                 {
-                    argument = opts.Argument.Replace(opts.VariableOut, VariableIn);
+                    QueryString = sr.ReadToEnd();
+                }
+                List<string> VariableInList = new List<string>();
+                opts.VariableIn = Enumerable.Empty<string>();
+                string connstr = $"Data Source={opts.ServerName};Initial Catalog={opts.DBName};Integrated Security=True;Connection Timeout=60;";
+
+                using (SqlConnection sqlconn = new SqlConnection(connstr))
+                {
+                    sqlconn.Open();
+                    using (SqlCommand sqlcmd = new SqlCommand())
+                    {
+                        sqlcmd.CommandTimeout = 3600; //setting query timeout for 1 hour
+                        sqlcmd.Connection = sqlconn;
+                        sqlcmd.CommandText = QueryString;
+
+                        using (SqlDataAdapter sqlda = new SqlDataAdapter())
+                        {
+                            using (DataSet ds = new DataSet())
+                            {
+                                sqlda.SelectCommand = sqlcmd;
+                                sqlda.Fill(ds);
+                                
+                                foreach (DataRow row in ds.Tables[0].Rows)
+                                {
+                                    var rowstr = "";
+                                    for (var i = 0; i < ds.Tables[0].Columns.Count; i++)
+                                    {
+                                        rowstr += row[i].ToString() + ( (i >= ds.Tables[0].Columns.Count-1) ? "": "|");
+                                    }
+                                    VariableInList.Add(rowstr);
+                                }
+
+                                opts.VariableIn = opts.VariableIn.Concat(VariableInList);
+                            }
+                        }
+                    }                    
+                }
+            }
+
+            // execute command with argument
+            _ = Parallel.ForEach(opts.VariableIn, (VariableIn) =>
+              {
+                  string argument = opts.Argument;
+                  string cmd = "";
+
+                  if (opts.Argument != null)
+                  {
+                      int varinidx = 0;
+                      foreach (var varin in VariableIn.Split('|'))
+                      {
+                          int varoutidx = 0;
+                          foreach (var varout in opts.VariableOut)
+                          {
+                              if (varoutidx == varinidx) { argument = argument.Replace(varout, varin); break; }
+                              varoutidx++;
+                          }
+                          varinidx++;
+                      }
+
+                    //argument = opts.Argument.Replace(opts.VariableOut, VariableIn);
                     cmd = $"{opts.Command} {argument}";
-                    logger.Debug($"Executing... : {cmd}");
+                      logger.Debug($"Executing... : {cmd}");
 
-                    LaunchCommandLineApp(opts.Command, opts.WaitForExit, argument);
-                }
-                else
-                {
-                    cmd = $"{opts.Command}";
-                    logger.Debug($"Executing... : {cmd}");
+                      LaunchCommandLineApp(opts.Command, opts.WaitForExit, argument);
+                  }
+                  else
+                  {
+                      cmd = $"{opts.Command}";
+                      logger.Debug($"Executing... : {cmd}");
 
-                    LaunchCommandLineApp(opts.Command, opts.WaitForExit);
-                }
+                      LaunchCommandLineApp(opts.Command, opts.WaitForExit);
+                  }
 
-                
-                logger.Debug($"Done : {cmd}");
-            });
+
+                  logger.Debug($"Done : {cmd}");
+              });
                         
         }
         

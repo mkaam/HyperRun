@@ -11,3 +11,4 @@ C:\BitBucket\hyperrun\HyperRun\obj\Debug\HyperRun.exe
 C:\BitBucket\hyperrun\HyperRun\obj\Debug\HyperRun.pdb
 C:\BitBucket\hyperrun\HyperRun\bin\Debug\VariableInFile.txt
 C:\BitBucket\hyperrun\HyperRun\bin\Debug\VariableInFile - Copy.txt
+C:\BitBucket\hyperrun\HyperRun\bin\Debug\CopyListQuery.sql
