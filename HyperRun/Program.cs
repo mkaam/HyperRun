@@ -146,12 +146,11 @@ namespace HyperRun
 
             }
 
-            if (opts.VariableInFile != null)
+            if (opts.VariableIn.Count() > 0)
             {
-                opts.VariableIn = File.ReadLines(opts.VariableInFile, Encoding.Default);
-            }
 
-            if (opts.VariableInQuery != null)
+            }
+            else if (opts.VariableInQuery != null)
             {
                 var QueryString = "";
                 using (StreamReader sr = new StreamReader(opts.VariableInQuery))
@@ -175,15 +174,17 @@ namespace HyperRun
                         {
                             using (DataSet ds = new DataSet())
                             {
-                                sqlda.SelectCommand = sqlcmd;
+                                sqlda.SelectCommand = sqlcmd;                                
                                 sqlda.Fill(ds);
-                                
+
+
+
                                 foreach (DataRow row in ds.Tables[0].Rows)
                                 {
                                     var rowstr = "";
                                     for (var i = 0; i < ds.Tables[0].Columns.Count; i++)
                                     {
-                                        rowstr += row[i].ToString() + ( (i >= ds.Tables[0].Columns.Count-1) ? "": "|");
+                                        rowstr += row[i].ToString() + ((i >= ds.Tables[0].Columns.Count - 1) ? "" : "|");
                                     }
                                     VariableInList.Add(rowstr);
                                 }
@@ -191,9 +192,14 @@ namespace HyperRun
                                 opts.VariableIn = opts.VariableIn.Concat(VariableInList);
                             }
                         }
-                    }                    
+                    }
                 }
             }
+            else if (opts.VariableInFile != null)
+            {
+                opts.VariableIn = File.ReadLines(opts.VariableInFile, Encoding.Default);
+            }
+
 
             // execute command with argument
             _ = Parallel.ForEach(opts.VariableIn, (VariableIn) =>

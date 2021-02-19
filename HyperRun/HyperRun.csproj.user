@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>--LogFile E:\ssisfiles\PDFForTA\Logs\HyperRunLog.csv --VariableInQuery E:\ssisfiles\PDFForTA\Query\CopyListQuery.sql --ServerName PMIIDSUBDEV42\DEV2012 --DBName Users --VariableOut {SourcePath} {FileName} {DestinationPath} {AreaCode} --Command robocopy.exe --Argument "%27{SourcePath}%27 %27{DestinationPath}%27 %27{FileName}%27 /r:3 /w:10 /log+:%27E:\ssisfiles\PDFForTA\Logs\{FileName}.log%27"</StartArguments>
+    <StartArguments>--VariableOut {Nama} --Command Notepad.exe -Argument {Nama}</StartArguments>
   </PropertyGroup>
 </Project>

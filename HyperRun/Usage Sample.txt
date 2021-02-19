@@ -1,3 +1,5 @@
 ﻿E:\Interface\Sampoerna\HyperRun\HyperRun.exe --VariableOut {AreaCode} --Command "powershell.exe" --Argument "-file E:\INTERFACE\SAMPOERNA\QueryToAllDB\script\AM-Mass_ImportCSVtoSQLTable.ps1 -csvdir \\PMIIDSUBDEV38\iSMSMirrorDirectory$\ftp_{AreaCode}_prd$\3.PRD\Import\TerritoryOOT -filter *.csv -target_server PMIIDSUBDEV42\DEV2012 -target_db Users -delimiter "","" -backupPath \\PMIIDSUBDEV38\iSMSMirrorDirectory$\ftp_{AreaCode}_prd$\3.PRD\Import\Archive -processingPath E:\interface\SAMPOERNA\QueryToAllDB\Processing\TerritoryOOT_{AreaCode}"
 
 --VariableInQuery "CopyListQuery.sql" --ServerName "PMIIDSUBDEV42\DEV2012" --DBName Users --VariableOut {SourcePath} {FileName} {DestinationPath} --Command robocopy.exe --Argument "{SourcePath} {DestinationPath} {FileName} /r:3 /w:10 /log+:E:\ssisfiles\PDFForTA\robocopy.log"
+
+--VariableOut {Nama} --Command Notepad.exe -Argument {Nama}

@@ -11,4 +11,3 @@ C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.csproj.CopyComplete
 C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.exe
 C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.pdb
 C:\BitBucket\hyperrun\HyperRun\bin\Release\CopyListQuery.sql
-C:\BitBucket\hyperrun\HyperRun\obj\Release\HyperRun.csprojAssemblyReference.cache
