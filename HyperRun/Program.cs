@@ -132,6 +132,8 @@ namespace HyperRun
             PathConfigure(opts);
             LoggerConfigure(opts);
 
+ 
+
             _watch = new Stopwatch();
             _watch.Start();
             logger.Debug("Application Start");
@@ -200,45 +202,100 @@ namespace HyperRun
                 opts.VariableIn = File.ReadLines(opts.VariableInFile, Encoding.Default);
             }
 
+            // 2021-03-02 , adding Parallel Option Max Thread or Max Degree
+            ParallelOptions parallelOpts = new ParallelOptions();
+
+            if (opts.MaxDegree > 0)
+            {
+                parallelOpts = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * opts.MaxDegree) * 2.0)) };
+            }
+            if (opts.MaxThread > 0)
+            {
+                parallelOpts = new ParallelOptions { MaxDegreeOfParallelism = opts.MaxThread };
+            }
+
 
             // execute command with argument
-            _ = Parallel.ForEach(opts.VariableIn, (VariableIn) =>
-              {
-                  string argument = opts.Argument;
-                  string cmd = "";
+            if (opts.MaxThread > 0 || opts.MaxDegree > 0)
+            {
+                _ = Parallel.ForEach(opts.VariableIn, parallelOpts, (VariableIn) =>
+                {
+                    string argument = opts.Argument;
+                    string cmd = "";
 
-                  if (opts.Argument != null)
-                  {
-                      int varinidx = 0;
-                      foreach (var varin in VariableIn.Split('|'))
-                      {
-                          int varoutidx = 0;
-                          foreach (var varout in opts.VariableOut)
-                          {
-                              if (varoutidx == varinidx) { argument = argument.Replace(varout, varin); break; }
-                              varoutidx++;
-                          }
-                          varinidx++;
-                      }
+                    if (opts.Argument != null)
+                    {
+                        int varinidx = 0;
+                        foreach (var varin in VariableIn.Split('|'))
+                        {
+                            int varoutidx = 0;
+                            foreach (var varout in opts.VariableOut)
+                            {
+                                if (varoutidx == varinidx) { argument = argument.Replace(varout, varin); break; }
+                                varoutidx++;
+                            }
+                            varinidx++;
+                        }
 
-                    //argument = opts.Argument.Replace(opts.VariableOut, VariableIn);
-                    cmd = $"{opts.Command} {argument}";
-                      logger.Debug($"Executing... : {cmd}");
+                        //argument = opts.Argument.Replace(opts.VariableOut, VariableIn);
+                        cmd = $"{opts.Command} {argument}";
+                        logger.Debug($"Executing... : {cmd}");
 
-                      LaunchCommandLineApp(opts.Command, opts.WaitForExit, argument);
-                  }
-                  else
-                  {
-                      cmd = $"{opts.Command}";
-                      logger.Debug($"Executing... : {cmd}");
+                        LaunchCommandLineApp(opts.Command, opts.WaitForExit, argument);
+                    }
+                    else
+                    {
+                        cmd = $"{opts.Command}";
+                        logger.Debug($"Executing... : {cmd}");
 
-                      LaunchCommandLineApp(opts.Command, opts.WaitForExit);
-                  }
+                        LaunchCommandLineApp(opts.Command, opts.WaitForExit);
+                    }
 
 
-                  logger.Debug($"Done : {cmd}");
-              });
-                        
+                    logger.Debug($"Done : {cmd}");
+                });
+            }
+            else
+            {
+                _ = Parallel.ForEach(opts.VariableIn, (VariableIn) =>
+                {
+                    string argument = opts.Argument;
+                    string cmd = "";
+
+                    if (opts.Argument != null)
+                    {
+                        int varinidx = 0;
+                        foreach (var varin in VariableIn.Split('|'))
+                        {
+                            int varoutidx = 0;
+                            foreach (var varout in opts.VariableOut)
+                            {
+                                if (varoutidx == varinidx) { argument = argument.Replace(varout, varin); break; }
+                                varoutidx++;
+                            }
+                            varinidx++;
+                        }
+
+                        //argument = opts.Argument.Replace(opts.VariableOut, VariableIn);
+                        cmd = $"{opts.Command} {argument}";
+                        logger.Debug($"Executing... : {cmd}");
+
+                        LaunchCommandLineApp(opts.Command, opts.WaitForExit, argument);
+                    }
+                    else
+                    {
+                        cmd = $"{opts.Command}";
+                        logger.Debug($"Executing... : {cmd}");
+
+                        LaunchCommandLineApp(opts.Command, opts.WaitForExit);
+                    }
+
+
+                    logger.Debug($"Done : {cmd}");
+                });
+
+            }
+
         }
         
         static void HandleParseError(IEnumerable<Error> errs)

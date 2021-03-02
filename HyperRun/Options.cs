@@ -43,6 +43,12 @@ namespace HyperRun
         [Option(Default = 3, HelpText = "Wait in hour after [Command] has been executed. before finally force close. Example : 3")]
         public int WaitForExit { get; set; }
 
+        [Option(HelpText = "Max Parallel Thread. will be override MaxDegree Argument")]
+        public int MaxThread { get; set; }
+
+        [Option(HelpText = "MaxDegreeOfParallelism")]
+        public int MaxDegree { get; set; }
+
         [Usage(ApplicationAlias = "HyperRun.exe")]
         public static IEnumerable<Example> Examples
         {
