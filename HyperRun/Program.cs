@@ -207,7 +207,7 @@ namespace HyperRun
 
             if (opts.MaxDegree > 0)
             {
-                parallelOpts = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * opts.MaxDegree) * 2.0)) };
+                parallelOpts = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * (opts.MaxDegree/100.0)) * 2.0)) };
             }
             if (opts.MaxThread > 0)
             {
@@ -340,7 +340,7 @@ namespace HyperRun
             }
             catch (Exception ex)
             {
-                logger.Error($"LaunchCommandLineApp {ExeFile} {WaitForExit} {Argument}", ex);
+                logger.Error($"LaunchCommandLineApp {ExeFile} {Argument}", ex);
             }
                    
         }

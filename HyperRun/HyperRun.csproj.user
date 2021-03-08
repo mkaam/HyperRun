@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>--VariableOut {Nama} --Command Notepad.exe -Argument {Nama}</StartArguments>
+    <StartArguments>--MaxDegree 50 --LogFile E:\SSISFiles\ImportCustomerBankAccount\Logs\HyperRunCopyInprogressFile.csv --VariableInFile E:\SSISFiles\ImportCustomerBankAccount\config\VariableInFile.txt --VariableOut {AreaCode} --Command "copy" --Argument "/Y \\hmsisms{AreaCode}prd.id.pmi\ftp_{AreaCode}_prd%24\3.PRD\Import\BankAccountImport\%2a.csv \\hmsisms{AreaCode}prd.id.pmi\ftp_{AreaCode}_prd%24\3.PRD\Import\BankAccountImport\inprogress\{AreaCode}_CustBankAccount.csv"</StartArguments>
   </PropertyGroup>
 </Project>
